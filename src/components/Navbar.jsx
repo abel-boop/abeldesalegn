@@ -10,8 +10,9 @@ const navItems = ["Projects", "About", "Contact"];
 
 const NavBar = () => {
   // State for toggling audio and visual indicator
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(true);
   const [isIndicatorActive, setIsIndicatorActive] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
 
   // Refs for audio and navigation container
   const audioElementRef = useRef(null);
@@ -35,6 +36,16 @@ const NavBar = () => {
       audioElementRef.current.pause();
     }
   }, [isAudioPlaying]);
+
+  // Unmute audio on first user interaction
+  useEffect(() => {
+    const unmuteOnInteraction = () => {
+      setIsMuted(false);
+      window.removeEventListener("click", unmuteOnInteraction);
+    };
+    window.addEventListener("click", unmuteOnInteraction);
+    return () => window.removeEventListener("click", unmuteOnInteraction);
+  }, []);
 
   useEffect(() => {
     if (currentScrollY === 0) {
@@ -105,6 +116,8 @@ const NavBar = () => {
                 className="hidden"
                 src="/media/audio/loop.mp3"
                 loop
+                autoPlay
+                muted={isMuted}
               />
               {[1, 2, 3, 4].map((bar) => (
                 <div

@@ -1,6 +1,6 @@
 export async function onRequestGet(ctx) {
   const path = new URL(ctx.request.url).pathname.replace("/media/", "");
-  const key = "video/" + path;
+  const key = "videos/" + path;
   console.log("Looking for R2 key:", key);
   const file = await ctx.env.MEDIA.get(key);
   if (!file) return new Response(null, { status: 404 });
